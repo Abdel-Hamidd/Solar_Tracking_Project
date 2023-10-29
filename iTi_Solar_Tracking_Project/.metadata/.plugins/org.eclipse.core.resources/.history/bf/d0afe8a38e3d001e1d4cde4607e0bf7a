@@ -1,0 +1,77 @@
+/*
+ * main.c
+ *
+ *  Created on: Aug 2, 2023
+ *      Author: Yasmen
+ */
+
+#include "STD_TYPES.h"
+#include "BIT_MATH.h"
+
+#include "util/delay.h"
+
+#include "MDIO_interface.h"
+#include "MTIMER_interface.h"
+#include "MGIE_interface.h"
+#include "MADC_interface.h"
+#include "HLCD_interface.h"
+
+
+u16 MAP_U16MAPPING(u16 x_max, u16 x_min ,u16 y_max,u16 y_min,u16 y);
+void Servo(u16 angle);
+int main()
+{
+	PORT_voidInit();
+	MADC_voidInit();
+	HLCD_voidInit();
+
+	MTIMER1_voidInit(FAST_PWM_NON_INVERTING,TOP_FPWM_ICR1,DIV_8);
+	MTIMER1_voidSetTopValue(20000,TOP_FPWM_ICR1);
+	u16 ADC_u16Mapped ;
+	u16 ADC_u16Reading;
+	while(1)
+	{
+		ADC_u16Reading=MADC_u16GetValue(ADC_CHANNEL0);
+		ADC_u16Mapped=MAP_U16MAPPING(2250,450,1023,0,ADC_u16Reading);
+		HLCD_SetCursor(0,0);
+		Servo(ADC_u16Mapped);
+		HLCD_SendString("Angle = ");
+		HLCD_SendInt(ADC_u16Mapped);
+
+		/*if (ADC_u16Mapped>110)
+		{
+			HLCD_SendInt(ADC_u16Mapped);
+			Servo(ADC_u16Mapped);
+		}
+		else if(ADC_u16Mapped>140)
+		{
+			HLCD_SendInt(ADC_u16Mapped);
+			Servo(90);
+		}
+		else if (ADC_u16Mapped>180)
+		{
+			HLCD_SendInt(ADC_u16Mapped);
+			Servo(135);
+		}
+
+		else if (ADC_u16Mapped>220)
+		{
+			HLCD_SendInt(ADC_u16Mapped);
+			Servo(180);
+		}*/
+	}
+}
+
+u16 MAP_U16MAPPING(u16 x_max, u16 x_min ,u16 y_max,u16 y_min,u16 y)
+{
+	u16 x;
+	x=((u16)((u32)(x_max-x_min)*(y-y_min))/(y_max-y_min))+(x_min);
+	return x;
+}
+
+void Servo(u16 angle)
+{
+	MTIMER1_voidSetDutyCycle(angle);
+}
+
+

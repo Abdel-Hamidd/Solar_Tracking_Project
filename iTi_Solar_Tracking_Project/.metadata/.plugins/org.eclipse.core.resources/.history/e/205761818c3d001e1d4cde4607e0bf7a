@@ -1,0 +1,32 @@
+/*
+ * private.h
+ *
+ *  Created on: ??þ/??þ/????
+ *      Author: m
+ */
+
+#ifndef HAL_LCD_HAL_LCD_PRIVATE_H_
+#define HAL_LCD_HAL_LCD_PRIVATE_H_
+
+Std_ReturnType convert_uint8_to_string(u8 value, u8 *str);
+void HLCD_Send_String_8bit( u8  *data);
+void HLCD_Send_char_8bit( u8  data);
+void HLCD_INIT_8bit(void);
+void HLCD_Send_Command_8bit( u8 command);
+Std_ReturnType HLCD_Send_String_Position_8bit(u8 *string,u8 row , u8 column);
+Std_ReturnType HLCD_Send_char_Position_8bit(u8 data,u8 row , u8 column);
+Std_ReturnType HLCD_Send_CursorPosition_8bit(u8 row , u8 column);
+
+void HLCD_Send_Command_4bit(const u8 command);
+void HLCD_INIT_4bit(void);
+void HLCD_Send_char_4bit(const u8  data);
+
+
+Std_ReturnType convert_uint32_to_string(u32 value, u8 *str);
+Std_ReturnType convert_uint8_to_string(u8 value, u8 *str);
+
+#define LCD_4bit_MODE     1
+#define LCD_8bit_MODE     0
+
+#endif /* HAL_LCD_HAL_LCD_PRIVATE_H_ */
+
